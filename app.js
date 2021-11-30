@@ -18,9 +18,7 @@ submitBtn.addEventListener('click', submit);
 emptyBtn.addEventListener('click', emptyList);
 
 function showDataList() {
-	while (container.firstChild) {
-		container.removeChild(container.firstChild);
-	}
+	container.innerHTML = '';
 	listItem.forEach((el, id) => {
 		addListCard(el, id);
 	});
@@ -55,46 +53,20 @@ function submit() {
 }
 
 function addListCard(input, index) {
-	const listCard = document.createElement('div');
-	listCard.classList.add('list-card');
-	listCard.setAttribute('id', index);
-	container.appendChild(listCard);
+	const card = `<div id=${index} class="list-card"><p class="item">${input}</p><div class="list-action"><button id="edit-${index}" class="btn-edit" onclick="editItem('${input}', ${index})">Edit</button><button id="delete-${index}" class="btn-delete" onclick="deleteItem(${index})">Delete</button></div></div>`;
 
-	const listCardChildItem = document.createElement('p');
-	listCardChildItem.innerHTML = input;
-	listCardChildItem.classList.add('item');
+	container.innerHTML += card;
+}
 
-	const listCardChildListActions = document.createElement('div');
-	listCardChildListActions.classList.add('list-action');
+function editItem(input, id) {
+	inputItem.value = input;
+	submitBtn.innerHTML = 'Edit';
+	indexItem = id;
+	isEdit = true;
+}
 
-	listCard.appendChild(listCardChildItem);
-	listCard.appendChild(listCardChildListActions);
+function deleteItem(id) {
+	listItem.splice(id, 1);
 
-	const listActionChildBtnEdit = document.createElement('button');
-	listActionChildBtnEdit.classList.add('btn-edit');
-	listActionChildBtnEdit.setAttribute('id', `edit-${index}`);
-	listActionChildBtnEdit.innerHTML = 'Edit';
-
-	const listActionChildBtnDelete = document.createElement('button');
-	listActionChildBtnDelete.classList.add('btn-delete');
-	listActionChildBtnDelete.setAttribute('id', `delete-${index}`);
-	listActionChildBtnDelete.innerHTML = 'Delete';
-
-	listCardChildListActions.appendChild(listActionChildBtnEdit);
-	listCardChildListActions.appendChild(listActionChildBtnDelete);
-
-	const editButton = document.getElementById(`edit-${index}`);
-	editButton.addEventListener('click', function () {
-		inputItem.value = input;
-		submitBtn.innerHTML = 'Edit';
-		indexItem = index;
-		isEdit = true;
-	});
-
-	const deleteButton = document.getElementById(`delete-${index}`);
-	deleteButton.addEventListener('click', function () {
-		listItem.splice(index, 1);
-
-		showDataList();
-	});
+	showDataList();
 }
